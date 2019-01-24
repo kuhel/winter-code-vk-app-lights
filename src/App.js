@@ -155,12 +155,13 @@ class App extends React.Component {
 	}
 
 	goToEvent = (e) => {
-		// this.setState({
-		// 	location: 'event5c49a2efd675577be34cd40b',
-		// });
+		this.setState({
+			location: '5c49a2efd675577be34cd40b',
+		});
 		// this.setState({ event: _data });
 		// this.go(null, 'event5c49a2efd675577be34cd40b');
 		this.getEventData('event5c49a2efd675577be34cd40b', () => {
+			console.log(this);
 			this.go(null,'event5c49a2efd675577be34cd40b');
 		});
 	}

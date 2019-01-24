@@ -87,8 +87,9 @@ class Event extends React.Component {
 					{this.state.isEnded === false && <h3 style={{color: 'white', textAlign: 'center', marginTop: 100}}>{this.props.location ? this.props.location : 'No location data'}</h3>}
 					{this.state.isEnded && <div className='EventEndPic' />}
 					{this.state.isEnded && <h3 style={{color: 'black', textAlign: 'center'}}>Событие закончилось</h3>}
-					{this.state.willStart && <h3 style={{color: 'black', textAlign: 'center'}}>Событие скоро начнется <br/>{this.state.offset} <br/>{this.state.time}</h3>}
+					{/* {this.state.willStart && <h3 style={{color: 'black', textAlign: 'center'}}>Событие скоро начнется <br/>{this.state.offset} <br/>{this.state.time}</h3>} */}
 					{this.state.willStart && <Counter time={this.state.offset + new Date().getTime()} renderer={renderer}/>}
+					{this.state.isEnded && <Div><Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button></Div>}
 				</Div>
 			</Panel>
 		)
@@ -97,11 +98,16 @@ class Event extends React.Component {
 
 const renderer = props => {
 	if (props.total !== 0) {
-	  return (
-		<h4>
-		  {props.hours}:{props.minutes}:{props.seconds}
-		</h4>
-	  );
+		if (props.minutes > 0) {
+			return (
+				<h4>До начала осталось {props.minutes} минут</h4>
+			);
+		} else {
+			return (
+				<h4>До начала осталось менее минуты</h4>
+			  );
+		}
+	
 	} else {
 		return null;
 	}
