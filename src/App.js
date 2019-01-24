@@ -2,9 +2,54 @@ import React from 'react';
 import connect from '@vkontakte/vkui-connect';
 import { View } from '@vkontakte/vkui';
 import Home from './Panels/Home';
-import Friends from './Panels/Friends';
-import { ROUTES } from './config';
-// import '@vkontakte/vkui/dist/vkui.css';
+import Slides from './Panels/Slides';
+import Event from './Panels/Event';
+import { ROUTES_VALUES, API_DOMAIN, API_ROUTES, ROUTES } from './config';
+import '@vkontakte/vkui/dist/vkui.css';
+let _data = {
+    "ts": 1548344617,
+    "items": {
+        "0": {
+            "color": {
+                "enabled": true,
+                "color": "#FFFFFF",
+                "duration": 1000,
+                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+            },
+            "sound": {
+                "enabled": true,
+                "tone": "Dm",
+                "duration": 1000
+            }
+        },
+        "5000": {
+            "color": {
+                "enabled": true,
+                "color": "#0030ff",
+                "duration": 1000,
+                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+            },
+            "sound": {
+                "enabled": true,
+                "tone": "Dm",
+                "duration": 1000
+            }
+        },
+        "10000": {
+            "color": {
+                "enabled": true,
+                "color": "#ff0f0f",
+                "duration": 1000,
+                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+            },
+            "sound": {
+                "enabled": true,
+                "tone": "Dm",
+                "duration": 1000
+            }
+        }
+    }
+};
 
 const location = window.location.hash.substr(1);
 
@@ -13,7 +58,8 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			activePanel: ~ROUTES.indexOf(location) ? location : 'home',
+			activePanel: ~ROUTES_VALUES.indexOf(location) ? location : 'home',
+			location: location ? location : false,
 			fetchedUser: null,
 			geodata: null,
 		};
@@ -26,6 +72,10 @@ class App extends React.Component {
 					case 'VKWebAppGetUserInfoResult':
 						this.setState({ fetchedUser: e.detail.data });
 						break;
+					case 'VKWebAppOpenQRResult':
+						this.setState({ qrData: e.detail.data.qr_data });
+						this.sendQRData(e.detail.data.qr_data);
+						break;	
 					case 'VKWebAppGeodataResult':
 						this.setState({ 
 							geodata: {
@@ -34,18 +84,6 @@ class App extends React.Component {
 							}
 						});
 						break;
-					case 'VKWebAppAccessTokenReceived':
-						this.setState({
-							token: e.detail.data.access_token
-						});
-						this.getFriends();
-						break;
-					case 'VKWebAppCallAPIMethodResult':
-						debugger;
-						if (e.detail.data.request_id === '34bc') {
-							this.setState({ friends: e.detail.data.response.items });
-						}
-						break;
 					default:
 						break;
 				}
@@ -53,24 +91,59 @@ class App extends React.Component {
 		});
 		connect.send('VKWebAppGetUserInfo', {});
 		connect.send('VKWebAppGetGeodata', {});
+		connect.send("VKWebAppSetViewSettings", {action_bar_color: "#000"});
+
+		if (this.state.location) {
+			this.getEventData(this.state.location, () => {
+				this.go(null, ROUTES.EVENT + this.state.location);
+			});
+		}
+
+		// Mobyman API
+		fetch(API_DOMAIN + API_ROUTES.INITIAL)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				if (_data.firstLaunch) {
+					this.go(null, ROUTES.SLIDES);
+				}
+			})
+			.catch(error => console.error(error))
 	}
 
-	getToken = () => {
-		connect.send("VKWebAppGetAuthToken", {"app_id": 6695435, "scope": "friends"});
+	sendQRData(data) {
+		fetch(API_DOMAIN + API_ROUTES.QR, {
+			method: "POST",
+			body: data
+		})
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				if (_data.firstLaunch) {
+					this.go(null, ROUTES.SLIDES);
+				}
+			})
+			.catch(error => console.error(error))
 	}
 
-	getFriends() {
-		connect.send("VKWebAppCallAPIMethod", {
-			'method': "friends.get",
-			'request_id': '34bc',
-			'params': {
-				'fields': 'city,domain,photo_100',
-				'count': 25,
-				'order': 'mobile',
-				'access_token': this.state.token,
-				'v': '5.87',
-			}
-		});
+	getEventData(data, cb) {
+
+		const timer = roundTimeMinute().getTime();
+		fetch(API_DOMAIN + API_ROUTES.GET_EVENT + data.replace(ROUTES.EVENT, '') + '&desired_ts=' + timer)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				// data = _data;
+				this.setState({ event: data });
+				if (cb) {
+					cb();
+				}
+			})
+			.catch(error => console.error(error))
+	}
+
+	getQrCode = () => {
+		connect.send("VKWebAppOpenQR");
 	}
 
 	setLocation = (route) => {
@@ -81,20 +154,50 @@ class App extends React.Component {
 		}
 	}
 
-	go = (e) => {
-		const route = e.currentTarget.dataset.to;
-		this.setState({ activePanel: route })
-		this.setLocation(route)
+	goToEvent = (e) => {
+		// this.setState({
+		// 	location: 'event5c49a2efd675577be34cd40b',
+		// });
+		// this.setState({ event: _data });
+		// this.go(null, 'event5c49a2efd675577be34cd40b');
+		this.getEventData('event5c49a2efd675577be34cd40b', () => {
+			this.go(null,'event5c49a2efd675577be34cd40b');
+		});
+	}
+
+	go = (e, route) => {
+		let panel = '';
+		if (e) {
+			panel = e.currentTarget.dataset.to;
+		} else if (route) {
+			panel = route;
+		}
+		this.setState({ activePanel: panel })
+		this.setLocation(panel)
 	};
 
 	render() {
 		return (
 			<View activePanel={this.state.activePanel}>
-				<Home id="home" user={this.state.fetchedUser} geodata={this.state.geodata}  go={this.go} />
-				<Friends id="friends" data={this.state.data} friends={this.state.friends} getToken={this.getToken} token={this.state.token} go={this.go} />
+				<Slides id="slides" user={this.state.fetchedUser} geodata={this.state.geodata} go={this.go} />
+				<Home id="home" goToEvent={this.goToEvent} user={this.state.fetchedUser} qrData={this.state.qrData}  go={this.go} getQR={this.getQrCode}/>
+				<Event id={`event${this.state.location}`} location={this.state.location} event={this.state.event} go={this.go} getQR={this.getQrCode}/>
 			</View>
 		);
 	}
+}
+
+const roundTimeMinute = (time) => {
+	var time = 1000 * 60;
+	var date = new Date();
+	var rounded;
+	if (date.getSeconds() < 30) {
+		rounded = new Date(Math.round((date.getTime() + 60000) / time) * time);
+	} else {
+		rounded = new Date(Math.round(date.getTime() / time) * time);
+	}
+
+    return rounded;
 }
 
 export default App;

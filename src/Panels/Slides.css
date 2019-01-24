@@ -1,0 +1,37 @@
+.SlideItem {
+	display: flex;
+	flex-direction: column;
+	/* justify-content: center; */
+	align-items: center;
+	padding-top: 64px;
+	padding-left: 32px;
+	padding-right: 32px;
+	box-sizing: border-box;
+}
+
+.SlideItem figure img {
+	max-width: 90%;
+
+	max-height: 320px;
+}
+
+.SlideItem figure {
+	margin: 0;
+	text-align: center;
+}
+
+.Gallery__bullets {
+	bottom: 32px;
+}
+
+#slides .Button--lvl-secondary {
+	background-color: rgba(235, 237, 240, 0.4);
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.SkipBtn {
+	position: absolute;
+	bottom: 60px;
+	left: 0;
+	right: 0;
+}

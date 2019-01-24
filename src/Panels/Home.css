@@ -1,5 +1,31 @@
+figure {
+	margin: 0;
+}
 
-.map > div {
-	position: relative;
-	height: 480px;
+.MainScreen {
+	display: flex;
+    flex-flow: column nowrap;
+	width: 100%;
+	height: 100vh;
+	padding: 0;
+	background-image: url('https://cdn.dribbble.com/users/1493623/screenshots/3646045/11.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	/* background-size: contain; */
+	background-color: #000;
+}
+
+.MainScreen__Buttons {
+	display: flex;
+    justify-content: space-between;
+	margin-top: auto;
+	padding-bottom: 32px;
+}
+
+.MainScreen__Buttons button {
+	padding: 16px;
+}
+
+.Button__before .Icon--24 {
+	margin-right: 0;
 }

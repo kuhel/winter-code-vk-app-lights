@@ -1,53 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Group, ListItem, Avatar, PanelHeader, Button, Div } from '@vkontakte/vkui';
-import Map from '../Components/Map';
-// import './Home.css';
+import { Panel, Group, Gallery, View, Button, Div } from '@vkontakte/vkui';
+import '@vkontakte/vkui/dist/vkui.css';
+import './Home.css';
+import Icon24Camera from '@vkontakte/icons/dist/24/camera';
+import Icon24List from '@vkontakte/icons/dist/24/list';
 
-const Home = (props) => (
-	<Panel id={props.id}>
-		<PanelHeader>Maps of Museums Nearby</PanelHeader>
+class Home extends React.Component {
 
-		<Div className='map'>
-			<h2>Map of museums near your location</h2>
-			<Map geodata={props.geodata}/>
-		</Div>
+    constructor (props) {
 
-		{
-			props.user &&
-			<Group title="User Info">
-				<ListItem
-					before={<Avatar src={props.user.photo_100}/>}
-					description={props.user.city && props.user.city.title}
-				>
-					{`${props.user.first_name} ${props.user.last_name}`}
-				</ListItem>
-			</Group>
+		super(props);
+
+		this.state = {
+			slideIndex: 0
 		}
+    }
 
-		<Group>
-			<ListItem>
-				<Button size='l' stretched onClick={props.go} data-to='friends'>Friends list</Button>
-			</ListItem>
-		</Group>
-	</Panel>
-);
+    render () {
+		return (
+			<Panel id={this.props.id}>
+				<Div className='MainScreen'>
+					<h3 onClick={this.props.goToEvent} style={{color: 'white', textAlign: 'center', marginTop: 100}}>{this.props.qrData ? this.props.qrData : 'Click here'}</h3>
+					<Div className="MainScreen__Buttons">
+						<Button onClick={this.props.getQR} before={<Icon24Camera fill="rgba(255,255,255,0.75)"/>} size="l" level="tertiary" />
 
-Home.propTypes = {
-	id: PropTypes.string.isRequired,
-	user: PropTypes.shape({
-		photo_200: PropTypes.string,
-		first_name: PropTypes.string,
-		last_name: PropTypes.string,
-		city: PropTypes.shape({
-			title: PropTypes.string,
-		}),
-	}),
-	geodata: PropTypes.shape({
-		lat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		lng: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	}),
-	go: PropTypes.func.isRequired,
-};
-
+						<Button before={<Icon24List fill="rgba(255,255,255,0.75)"/>} size="l" level="tertiary" />
+					</Div>
+				</Div>
+			</Panel>
+		)
+    }
+}
 export default Home;
