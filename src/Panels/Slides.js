@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Panel, Group, Gallery, View, Button, Div } from '@vkontakte/vkui';
+import { Panel, Gallery, Button, Div } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 import './Slides.css';
 

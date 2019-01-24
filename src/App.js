@@ -6,50 +6,50 @@ import Slides from './Panels/Slides';
 import Event from './Panels/Event';
 import { ROUTES_VALUES, API_DOMAIN, API_ROUTES, ROUTES } from './config';
 import '@vkontakte/vkui/dist/vkui.css';
-let _data = {
-    "ts": 1548344617,
-    "items": {
-        "0": {
-            "color": {
-                "enabled": true,
-                "color": "#FFFFFF",
-                "duration": 1000,
-                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-            },
-            "sound": {
-                "enabled": true,
-                "tone": "Dm",
-                "duration": 1000
-            }
-        },
-        "5000": {
-            "color": {
-                "enabled": true,
-                "color": "#0030ff",
-                "duration": 1000,
-                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-            },
-            "sound": {
-                "enabled": true,
-                "tone": "Dm",
-                "duration": 1000
-            }
-        },
-        "10000": {
-            "color": {
-                "enabled": true,
-                "color": "#ff0f0f",
-                "duration": 1000,
-                "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-            },
-            "sound": {
-                "enabled": true,
-                "tone": "Dm",
-                "duration": 1000
-            }
-        }
-    }
-};
+// let _data = {
+//     "ts": 1548344617,
+//     "items": {
+//         "0": {
+//             "color": {
+//                 "enabled": true,
+//                 "color": "#FFFFFF",
+//                 "duration": 1000,
+//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+//             },
+//             "sound": {
+//                 "enabled": true,
+//                 "tone": "Dm",
+//                 "duration": 1000
+//             }
+//         },
+//         "5000": {
+//             "color": {
+//                 "enabled": true,
+//                 "color": "#0030ff",
+//                 "duration": 1000,
+//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+//             },
+//             "sound": {
+//                 "enabled": true,
+//                 "tone": "Dm",
+//                 "duration": 1000
+//             }
+//         },
+//         "10000": {
+//             "color": {
+//                 "enabled": true,
+//                 "color": "#ff0f0f",
+//                 "duration": 1000,
+//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
+//             },
+//             "sound": {
+//                 "enabled": true,
+//                 "tone": "Dm",
+//                 "duration": 1000
+//             }
+//         }
+//     }
+// };
 
 const location = window.location.hash.substr(1);
 
@@ -186,7 +186,7 @@ class App extends React.Component {
 	}
 }
 
-const roundTimeMinute = (time) => {
+const roundTimeMinute = () => {
 	var time = 1000 * 60;
 	var date = new Date();
 	var rounded;

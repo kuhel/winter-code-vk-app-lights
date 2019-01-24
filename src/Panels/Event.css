@@ -29,7 +29,21 @@
 	max-width: 80%;
 	background-color: #fff;
 	border-radius: 12px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35)
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);	
+	transform: translateY(0);
+	opacity: 1;
+	transition: all .45s ease;
+}
+
+.EventEnded--hide {
+	transition-delay: .3s;
+	opacity: 0;
+	transform: translateY(200px);
+}
+
+.EventEnded--hide-no-delay {
+	opacity: 0;
+	transform: translateY(200px);
 }
 
 .EventEndPic {
