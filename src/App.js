@@ -104,35 +104,34 @@ class App extends React.Component {
 			.then(response => response.json())
 			.then(data => {
 				console.log(data);
-				if (_data.firstLaunch) {
+				if (data.firstLaunch) {
 					this.go(null, ROUTES.SLIDES);
 				}
 			})
 			.catch(error => console.error(error))
 	}
 
-	sendQRData(data) {
-		fetch(API_DOMAIN + API_ROUTES.QR, {
-			method: "POST",
-			body: data
-		})
+	parseQRData(data) {
+		let qrData = data.split('/');
+		return `id=${qrData[0]}&x=${qrData[1]}&y=${qrData[2]}`;
+	}
+
+	sendQRData(data, cb) {
+		const timer = roundTimeMinute().getTime();
+		fetch(API_DOMAIN + API_ROUTES.QR + this.parseQRData(data) + '&desired_ts=' + timer)
 			.then(response => response.json())
 			.then(data => {
-				console.log(data);
-				if (_data.firstLaunch) {
-					this.go(null, ROUTES.SLIDES);
-				}
+				this.setState({ event: data });
+				this.go(null, ROUTES.EVENT + this.state.location);
 			})
 			.catch(error => console.error(error))
 	}
 
 	getEventData(data, cb) {
-
 		const timer = roundTimeMinute().getTime();
 		fetch(API_DOMAIN + API_ROUTES.GET_EVENT + data.replace(ROUTES.EVENT, '') + '&desired_ts=' + timer)
 			.then(response => response.json())
 			.then(data => {
-				console.log(data);
 				// data = _data;
 				this.setState({ event: data });
 				if (cb) {
@@ -161,7 +160,6 @@ class App extends React.Component {
 		// this.setState({ event: _data });
 		// this.go(null, 'event5c49a2efd675577be34cd40b');
 		this.getEventData('event5c49a2efd675577be34cd40b', () => {
-			console.log(this);
 			this.go(null,'event5c49a2efd675577be34cd40b');
 		});
 	}
@@ -193,7 +191,7 @@ const roundTimeMinute = (time) => {
 	var date = new Date();
 	var rounded;
 	if (date.getSeconds() < 30) {
-		rounded = new Date(Math.round((date.getTime() + 60000) / time) * time);
+		rounded = new Date(Math.round((date.getTime() + 30000) / time) * time);
 	} else {
 		rounded = new Date(Math.round(date.getTime() / time) * time);
 	}

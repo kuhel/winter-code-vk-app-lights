@@ -13,6 +13,6 @@ export const API_DOMAIN = 'https://api.wc19.mobyman.org/api';
 
 export const API_ROUTES = {
 	INITIAL: '/initial',
-	QR: '/qr',
+	QR: '/get?',
 	GET_EVENT: '/get?id=',
 };

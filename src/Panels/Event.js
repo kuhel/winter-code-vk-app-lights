@@ -1,7 +1,9 @@
+/* global playTone */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Panel, Group, Gallery, View, Button, Div } from '@vkontakte/vkui';
 import Counter from '../Components/Countdown';
+import '../Utils/simpleTones';
 import '@vkontakte/vkui/dist/vkui.css';
 import './Event.css';
 
@@ -65,6 +67,15 @@ class Event extends React.Component {
 				this.setState({
 					current: event,
 				});
+				if (event.sound) {
+					if (event.sound.tone) {
+						if (event.sound.duration && event.sound.modulation) {
+							playTone(event.sound.tone, event.sound.modulation, parseInt(event.sound.duration, 10) / 1000);
+						} else if (event.sound.duration) {
+							playTone(event.sound.tone, null, parseInt(event.sound.duration, 10) / 1000);
+						}
+					}
+				}
 				this.changeColor(i + 1)
 				if (i + 1 === Object.keys(this.props.event.items).length) {
 					setTimeout(() => {
@@ -80,16 +91,24 @@ class Event extends React.Component {
     render () {
 		return (
 			<Panel id={this.props.id}>
-				<Div className='ColorScreen' style={{
+				<Div className={`ColorScreen ${this.state.isEnded ? 'ColorScreen--End' : ''}`} style={{
 					backgroundColor: this.state.current.color.color,
 					transition: `background-color ${this.state.current.color.easing}`,
 				}}>
 					{this.state.isEnded === false && <h3 style={{color: 'white', textAlign: 'center', marginTop: 100}}>{this.props.location ? this.props.location : 'No location data'}</h3>}
-					{this.state.isEnded && <div className='EventEndPic' />}
-					{this.state.isEnded && <h3 style={{color: 'black', textAlign: 'center'}}>Событие закончилось</h3>}
 					{/* {this.state.willStart && <h3 style={{color: 'black', textAlign: 'center'}}>Событие скоро начнется <br/>{this.state.offset} <br/>{this.state.time}</h3>} */}
-					{this.state.willStart && <Counter time={this.state.offset + new Date().getTime()} renderer={renderer}/>}
-					{this.state.isEnded && <Div><Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button></Div>}
+					{this.state.willStart &&
+					<Div className="EventEnded">
+						<div className='EventEndPic' />
+						<Counter time={this.state.offset + new Date().getTime()} renderer={renderer}/>
+						<Div><Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button></Div>
+					</Div>
+					}
+					{this.state.isEnded && <Div className="EventEnded">
+						<div className='EventEndPic' />
+						<h3 style={{color: 'black', textAlign: 'center'}}>Событие закончилось</h3>
+						<Div><Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button></Div>
+					</Div>}
 				</Div>
 			</Panel>
 		)
@@ -100,11 +119,11 @@ const renderer = props => {
 	if (props.total !== 0) {
 		if (props.minutes > 0) {
 			return (
-				<h4>До начала осталось {props.minutes} минут</h4>
+				<h3 style={{color: 'black', textAlign: 'center'}}>До начала осталось {props.minutes} минут</h3>
 			);
 		} else {
 			return (
-				<h4>До начала осталось менее минуты</h4>
+				<h3 style={{color: 'black', textAlign: 'center'}}>До начала осталось менее минуты</h3>
 			  );
 		}
 	
