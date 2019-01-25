@@ -1,8 +1,10 @@
 /* global playTone */
 import React from 'react';
-import { Panel, Button, Div } from '@vkontakte/vkui';
+import { Panel, Button, Div, HeaderButton, osname, IOS } from '@vkontakte/vkui';
 import Counter from '../Components/Countdown';
 import '../Utils/simpleTones';
+import Icon24Back from '@vkontakte/icons/dist/24/back';
+import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import '@vkontakte/vkui/dist/vkui.css';
 import './Event.css';
 
@@ -127,6 +129,11 @@ class Event extends React.Component {
 					backgroundColor: this.state.current.color.color,
 					transition: `background-color ${this.state.current.color.easing}`,
 				}}>
+
+					{(!this.state.willStart && !this.state.isEnded) &&
+						<Div className="EventBackButton">
+							<HeaderButton onClick={() => this.props.go(null, 'home')}>{osname === IOS ? <Icon28ChevronBack fill="rgba(0, 0, 0, 0.8)" /> : <Icon24Back fill="rgba(0, 0, 0, 0.8)" />}</HeaderButton>
+						</Div>}
 					{/* {this.state.isEnded === false && <h3 style={{color: 'white', textAlign: 'center', marginTop: 100}}>{this.props.location ? this.props.location : 'No location data'}</h3>} */}
 					{/* {this.state.willStart && <h3 style={{color: 'black', textAlign: 'center'}}>Событие скоро начнется <br/>{this.state.offset} <br/>{this.state.time}</h3>} */}
 

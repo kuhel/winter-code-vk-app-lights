@@ -18,7 +18,6 @@ import './Slides.css';
 
     getEvents = () => {
       const search = this.state.search.toLowerCase();
-      console.log(this.props.events);
       return this.props.events.filter(({title}) => ~title.toLowerCase().indexOf(search));
     }
 
@@ -28,8 +27,8 @@ import './Slides.css';
       return (
         <div>
           <PanelHeader
-            left={<HeaderButton onClick={this.props.goSearch}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-            right={osname === ANDROID && <HeaderButton onClick={this.toggleSearch}><Icon24Search /></HeaderButton>}
+            left={<HeaderButton onClick={() => this.props.go(null, 'home')}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+            right={osname === ANDROID && <HeaderButton onClick={() => this.props.go(null, 'home')}><Icon24Search /></HeaderButton>}
           >
             <Search
               theme="header"
@@ -50,10 +49,10 @@ import './Slides.css';
     }
   }
 
-  const EventsList = ({ events, goToEvent }) => {
+  const EventsList = ({ events, goToEvent, go }) => {
     return (
       <Panel id={ROUTES.EVENTS_LIST}>
-          <HeaderSearch goToEvent={goToEvent} events={events}/>
+          <HeaderSearch goToEvent={goToEvent} events={events} go={go} />
         </Panel>
     );
   }

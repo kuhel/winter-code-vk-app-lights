@@ -49,6 +49,12 @@
 	transform: translateY(200px);
 }
 
+.EventBackButton {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
+
 .EventEndPic {
 	width: 220px;
     height: 220px;
