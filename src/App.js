@@ -4,6 +4,7 @@ import { View } from '@vkontakte/vkui';
 import Home from './Panels/Home';
 import Slides from './Panels/Slides';
 import Event from './Panels/Event';
+import EventsList from './Panels/EventsList';
 import { ROUTES_VALUES, API_DOMAIN, API_ROUTES, ROUTES } from './config';
 import '@vkontakte/vkui/dist/vkui.css';
 
@@ -19,6 +20,7 @@ class App extends React.Component {
 			location: location ? location : false,
 			fetchedUser: null,
 			geodata: null,
+			eventsList: [],
 		};
 	}
 
@@ -104,6 +106,16 @@ class App extends React.Component {
 			.catch(error => console.error(error))
 	}
 
+	getEventsList = (data,) => {
+		fetch(API_DOMAIN + API_ROUTES.GET_EVENTS_LIST)
+			.then(response => response.json())
+			.then(data => {
+				this.setState({ eventsList: data });
+				this.go(null, ROUTES.EVENTS_LIST);
+			})
+			.catch(error => console.error(error))
+	}
+
 	getQrCode = () => {
 		connect.send("VKWebAppOpenQR");
 	}
@@ -116,14 +128,12 @@ class App extends React.Component {
 		}
 	}
 
-	goToEvent = (e) => {
+	goToEvent = (id) => {
 		this.setState({
-			location: '5c49a2efd675577be34cd40b',
+			location: id,
 		});
-		// this.setState({ event: _data });
-		// this.go(null, 'event5c49a2efd675577be34cd40b');
-		this.getEventData('event5c49a2efd675577be34cd40b', () => {
-			this.go(null,'event5c49a2efd675577be34cd40b');
+		this.getEventData(id, () => {
+			this.go(null, ROUTES.EVENT + id);
 		});
 	}
 
@@ -141,9 +151,10 @@ class App extends React.Component {
 	render() {
 		return (
 			<View activePanel={this.state.activePanel}>
-				<Slides id="slides" user={this.state.fetchedUser} geodata={this.state.geodata} go={this.go} />
-				<Home id="home" goToEvent={this.goToEvent} user={this.state.fetchedUser} qrData={this.state.qrData}  go={this.go} getQR={this.getQrCode}/>
-				<Event id={`event${this.state.location}`} location={this.state.location} event={this.state.event} go={this.go} getQR={this.getQrCode}/>
+				<Slides id={ROUTES.SLIDES} user={this.state.fetchedUser} geodata={this.state.geodata} go={this.go} />
+				<Home id='home' goToEvent={this.goToEvent} user={this.state.fetchedUser} qrData={this.state.qrData} go={this.go} getQR={this.getQrCode} getEvents={this.getEventsList} />
+				<Event id={`event${this.state.location}`} location={this.state.location} event={this.state.event} go={this.go} getQR={this.getQrCode} />
+				<EventsList goToEvent={this.goToEvent} id={ROUTES.EVENTS_LIST} user={this.state.fetchedUser} geodata={this.state.geodata} go={this.go} events={this.state.eventsList} />
 			</View>
 		);
 	}

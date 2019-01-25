@@ -16,7 +16,7 @@ class Slides extends React.Component {
 
     render () {
       return (
-        <Panel id={this.props.id}>
+        <Panel id={this.props.id} className='NoPadding'>
           <Gallery
             slideWidth="100%"
             style={{ height: '100vh' }}

@@ -9,6 +9,11 @@
 	box-sizing: border-box;
 }
 
+.SlideItem .Panel__in {
+  padding: 0 !important;
+}
+
+
 .SlideItem figure img {
 	max-width: 90%;
 

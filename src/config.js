@@ -5,6 +5,7 @@ export const GET_OBJECT_VALUES = function (obj) {
 export const ROUTES = {
 	SLIDES: 'slides',
 	EVENT: 'event',
+	EVENTS_LIST: 'events',
 };
 
 export const ROUTES_VALUES = GET_OBJECT_VALUES(ROUTES);
@@ -15,4 +16,5 @@ export const API_ROUTES = {
 	INITIAL: '/initial',
 	QR: '/get?',
 	GET_EVENT: '/get?id=',
+	GET_EVENTS_LIST: '/list',
 };

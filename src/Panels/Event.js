@@ -122,7 +122,7 @@ class Event extends React.Component {
 
     render () {
 		return (
-			<Panel id={this.props.id}>
+			<Panel id={this.props.id} className='NoPadding'>
 				<Div className={`ColorScreen ${this.state.isEnded ? 'ColorScreen--End' : ''}`} style={{
 					backgroundColor: this.state.current.color.color,
 					transition: `background-color ${this.state.current.color.easing}`,

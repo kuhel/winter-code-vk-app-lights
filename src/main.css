@@ -18,6 +18,6 @@ div#root {
   font-family: var(--font-common);
 }
 
-.Panel__in {
+.NoPadding .Panel__in {
   padding: 0 !important;
 }

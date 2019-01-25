@@ -10,6 +10,10 @@
 	will-change: background-color;
 }
 
+.ColorScreen .Panel__in {
+  padding: 0 !important;
+}
+
 .ColorScreen .Button {
 	background-color: rgba(255, 255, 255, 0.75);
 	color: rgba(0, 0, 0, 0.85);
