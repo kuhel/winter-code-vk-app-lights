@@ -19,11 +19,12 @@ class Event extends React.Component {
 			},
 			offset: 0,
 			isEnded: false,
+			intervals: [],
 		}
 	}
 
 	componentWillMount() {
-		if (Object.keys(this.props.event.items)[0]) {
+		if (this.props.event && Object.keys(this.props.event.items)[0]) {
 			const event = this.props.event.items[Object.keys(this.props.event.items)[0]];
 			this.setState({
 				serverTs: this.props.event.server_ts,
@@ -37,17 +38,41 @@ class Event extends React.Component {
 		}
 	}
 
+	start = () => {
+		this.changeColor(1);
+	}
+
+	getOffset() {
+		const time = this.state.serverTs;
+		const offset = this.state.startTs - time;
+		return offset;
+	}
+
+	clickStart = () => {
+		let intervals = this.state.intervals;
+		if (intervals['start']) {
+			clearTimeout(intervals['start']);
+			intervals['start'] = setTimeout(this.start, 1);
+		}
+		this.setState({
+			willStart: true,
+			intervals,
+		});
+	}
+
 	componentDidMount() {
 		const time = this.state.serverTs;
 		const offset = this.state.startTs - time;
+		let intervals = this.state.intervals;
 		if (offset > 0) {
-			if (this.props.event) {
-				setTimeout(() => this.changeColor(0), offset);
+			if (this.props.event && !intervals['start']) {
+				intervals['start'] = setTimeout(this.start, offset);
 			}
 			this.setState({
 				willStart: true,
-				offset: offset,
-				time: time,
+				offset,
+				time,
+				intervals,
 			});
 		} else {
 			this.setState({
@@ -82,12 +107,17 @@ class Event extends React.Component {
 		}
 
 		if (i + 1 === keys.length) {
-			setTimeout(() => {
-				this.setState({
-					isEnded: true,
-				});
-			}, parseInt(event.color.duration + 4000, 10))
+			setTimeout(this.isEnded, parseInt(event.color.duration + 4000, 10));
 		}
+	}
+
+	isEnded = () => {
+		this.setState({
+			isEnded: true,
+		});
+		setTimeout(() => {
+			this.props.go(null, 'home');
+		}, 3000);
 	}
 
     render () {
@@ -104,7 +134,13 @@ class Event extends React.Component {
 						<div className='EventEndPic' />
 						{this.state.willStart && <Counter time={this.state.offset + new Date().getTime()} renderer={renderer}/>}
 						{this.state.isEnded && <h3 style={{color: 'black', textAlign: 'center'}}>Событие закончилось</h3>}
-						<Div><Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button></Div>
+						<Div style={{
+							display: 'flex',
+							width: '100%',
+						}}>
+							<Button size="l" stretched level="secondary" onClick={this.props.go} data-to='home'>Назад</Button>
+							{this.state.willStart && <Button size="l" stretched level="secondary" onClick={this.clickStart} data-to='home'>Начать</Button>}
+						</Div>
 					</Div>
 				</Div>
 			</Panel>

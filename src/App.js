@@ -6,52 +6,9 @@ import Slides from './Panels/Slides';
 import Event from './Panels/Event';
 import { ROUTES_VALUES, API_DOMAIN, API_ROUTES, ROUTES } from './config';
 import '@vkontakte/vkui/dist/vkui.css';
-// let _data = {
-//     "ts": 1548344617,
-//     "items": {
-//         "0": {
-//             "color": {
-//                 "enabled": true,
-//                 "color": "#FFFFFF",
-//                 "duration": 1000,
-//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-//             },
-//             "sound": {
-//                 "enabled": true,
-//                 "tone": "Dm",
-//                 "duration": 1000
-//             }
-//         },
-//         "5000": {
-//             "color": {
-//                 "enabled": true,
-//                 "color": "#0030ff",
-//                 "duration": 1000,
-//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-//             },
-//             "sound": {
-//                 "enabled": true,
-//                 "tone": "Dm",
-//                 "duration": 1000
-//             }
-//         },
-//         "10000": {
-//             "color": {
-//                 "enabled": true,
-//                 "color": "#ff0f0f",
-//                 "duration": 1000,
-//                 "easing": "600ms cubic-bezier(0.445, 0.05, 0.55, 0.95)"
-//             },
-//             "sound": {
-//                 "enabled": true,
-//                 "tone": "Dm",
-//                 "duration": 1000
-//             }
-//         }
-//     }
-// };
 
 const location = window.location.hash.substr(1);
+const debug = location.split('/');
 
 class App extends React.Component {
 	constructor(props) {
@@ -93,7 +50,13 @@ class App extends React.Component {
 		connect.send('VKWebAppGetGeodata', {});
 		connect.send("VKWebAppSetViewSettings", {action_bar_color: "#000"});
 
-		if (this.state.location) {
+		if (debug[0] === 'debug' || debug[0] === 'eventdebug') {
+			let debugLoc = debug;
+			debugLoc.shift();
+			this.sendQRData(debugLoc.join('/'), () => {
+				this.go(null, ROUTES.EVENT + debug[1]);
+			});
+		} else if (this.state.location) {
 			this.getEventData(this.state.location, () => {
 				this.go(null, ROUTES.EVENT + this.state.location);
 			});

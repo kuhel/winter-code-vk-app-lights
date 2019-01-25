@@ -36,7 +36,6 @@
 }
 
 .EventEnded--hide {
-	transition-delay: .3s;
 	opacity: 0;
 	transform: translateY(200px);
 }

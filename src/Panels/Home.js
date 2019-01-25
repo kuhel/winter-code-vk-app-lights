@@ -20,7 +20,7 @@ class Home extends React.Component {
 		return (
 			<Panel id={this.props.id}>
 				<Div className='MainScreen'>
-					<h3 onClick={this.props.goToEvent} style={{color: 'white', textAlign: 'center', marginTop: 100}}>{this.props.qrData ? this.props.qrData : 'Click here'}</h3>
+					<h1 onClick={this.props.goToEvent} style={{ fontSize: '96px', color: 'white', textAlign: 'center', marginTop: 100, paddingLeft: 20, paddingRight: 20}}>{this.props.qrData ? this.props.qrData : 'Click here'}</h1>
 					<Div className="MainScreen__Buttons">
 						<Button onClick={this.props.getQR} before={<Icon24Camera fill="rgba(255,255,255,0.75)"/>} size="l" level="tertiary" />
 
